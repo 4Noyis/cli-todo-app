@@ -22,7 +22,7 @@ Build the Application: Make sure you have Go installed on your system. Then, com
 go build -o todo
 ```
 
-Run the Application: Start managing your to-do tasks by running:
+ Start managing your to-do tasks by running:
 ```bash
 ./todo -help
 ```

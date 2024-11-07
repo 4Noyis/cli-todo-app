@@ -103,7 +103,7 @@ func (todos *Todos) Print() {
 			}
 		}
 
-		table.AddRow(strconv.Itoa(index+1), t.Title, completed, t.CreatedAt.Format(time.RFC1123), completeTime)
+		table.AddRow(strconv.Itoa(index), t.Title, completed, t.CreatedAt.Format(time.RFC1123), completeTime)
 	}
 
 	table.Render()
