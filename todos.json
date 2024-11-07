@@ -1,0 +1,20 @@
+[
+    {
+        "Title": "Buy sim card",
+        "Completed": true,
+        "CreatedAt": "2024-11-07T00:17:48.656123+02:00",
+        "CompleteTime": "2024-11-07T00:17:48.656124+02:00"
+    },
+    {
+        "Title": "Send email to prof.",
+        "Completed": false,
+        "CreatedAt": "2024-11-07T00:17:48.656124+02:00",
+        "CompleteTime": null
+    },
+    {
+        "Title": "buy ticket for flight",
+        "Completed": true,
+        "CreatedAt": "2024-11-07T17:44:22.807189+02:00",
+        "CompleteTime": "2024-11-07T17:44:53.094352+02:00"
+    }
+]

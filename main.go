@@ -2,11 +2,11 @@ package main
 
 func main() {
 	todos := Todos{}
+	storage := NewStorage[Todos]("todos.json")
+	storage.Load(&todos)
 
-	todos.Add("Buy sim card")
-	todos.Add("Send email to prof.")
+	cmdFlags := NewCmdFlags()
+	cmdFlags.Execute(&todos)
 
-	todos.Toggle(0)
-
-	todos.Print()
+	storage.Save(todos)
 }
