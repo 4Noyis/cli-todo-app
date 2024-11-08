@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 	"time"
 
@@ -87,8 +87,9 @@ func (todos *Todos) Edit(index int, title string) error {
 
 }
 
-func (todos *Todos) Print() {
-	table := table.New(os.Stdout)
+func (todos *Todos) Print() string {
+	var buf bytes.Buffer
+	table := table.New(&buf)
 	table.SetRowLines(false)
 	table.SetHeaders("#", "Title", "Completed", "Created At", "Completed At")
 
@@ -107,4 +108,5 @@ func (todos *Todos) Print() {
 	}
 
 	table.Render()
+	return buf.String()
 }
