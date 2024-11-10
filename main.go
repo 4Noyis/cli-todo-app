@@ -1,155 +1,151 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"os"
+	"strconv"
 	"strings"
-
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
-const listHeight = 14
+func HomePage() string {
 
-var (
-	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
-	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
-	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
-	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
-	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
-	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
-)
+	InputValue := ""
+	quit := true
 
-type item string
+	for quit {
+		fmt.Printf("1- Show To-Do List\n2- Mark Done Selected To-do\n3- Add New To-Do\n4- Delete To-Do\n5- Edit To-Do\n")
+		fmt.Print("Enter a command: ")
 
-func (i item) FilterValue() string { return "" }
+		reader := bufio.NewReader(os.Stdin)
+		line, _ := reader.ReadString('\n')
 
-type itemDelegate struct{}
+		var input string
 
-func (d itemDelegate) Height() int                             { return 1 }
-func (d itemDelegate) Spacing() int                            { return 0 }
-func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
-func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
-	i, ok := listItem.(item)
-	if !ok {
-		return
-	}
+		splittedString := strings.Split(line, "\n")
 
-	str := fmt.Sprintf("%d. %s", index+1, i)
-
-	fn := itemStyle.Render
-	if index == m.Index() {
-		fn = func(s ...string) string {
-			return selectedItemStyle.Render("> " + strings.Join(s, " "))
+		if splittedString[0] == "exit" || line == "exit" {
+			fmt.Println("[Info] Bye!")
+			os.Exit(0)
+		} else {
+			input = splittedString[0]
+			quit = false
+			InputValue = input
 		}
 	}
+	return InputValue
 
-	fmt.Fprint(w, fn(str))
 }
 
-type model struct {
-	list     list.Model
-	choice   string
-	quitting bool
+func TextInputField(printText string) string {
+	var inputValue string
+
+	for {
+		fmt.Print(printText + "-> ")
+
+		reader := bufio.NewReader(os.Stdin)
+		line, _ := reader.ReadString('\n')
+		input := strings.TrimSpace(line)
+
+		if input == "b" {
+			fmt.Print("\033[H\033[2J")
+			HomePage()
+		}
+
+		inputValue = input
+		break
+	}
+	return inputValue
 }
 
-func (m model) Init() tea.Cmd {
-	return nil
+func IndexInputField() int {
+	var inputValue int
+
+	for {
+		fmt.Print("To-do index: ")
+
+		reader := bufio.NewReader(os.Stdin)
+		line, _ := reader.ReadString('\n')
+		input := strings.TrimSpace(line)
+
+		if input == "b" {
+			fmt.Print("\033[H\033[2J")
+			HomePage()
+		}
+
+		// Try to parse the input as an integer
+		value, err := strconv.Atoi(input)
+		if err != nil {
+			fmt.Println("[Error] Please enter a valid integer or type 'exit' to quit.")
+			continue // Prompt again if input is invalid
+		}
+
+		inputValue = value
+		break
+	}
+	return inputValue
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		m.list.SetWidth(msg.Width)
-		return m, nil
-
-	case tea.KeyMsg:
-		switch keypress := msg.String(); keypress {
-		case "q", "ctrl+c":
-			m.quitting = true
-			return m, tea.Quit
-		case "b":
-			m.choice = ""
-			return m, nil
-		case "enter":
-			i, ok := m.list.SelectedItem().(item)
-			if ok {
-				m.choice = string(i)
-			}
-			return m, nil
+func waitForQuit() {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		input, _ := reader.ReadString('\n')
+		if input == "b\n" {
+			fmt.Println("Exiting...")
+			fmt.Print("\033[H\033[2J")
+			return
 		}
 	}
-
-	var cmd tea.Cmd
-	m.list, cmd = m.list.Update(msg)
-	return m, cmd
-}
-
-func (m model) View() string {
-	todos := Todos{}
-	storage := NewStorage[Todos]("todos.json")
-
-	storage.Load(&todos)
-	if m.choice == "Show To-do List" {
-		return todos.Print()
-	}
-	if m.choice == "Add New To-do" {
-		todos.Add("added new todo from new cli")
-		storage.Save(todos)
-		return todos.Print()
-	}
-	if m.choice == "Delete To-do" {
-		todos.Delete(1) // index
-		storage.Save(todos)
-		return todos.Print()
-	}
-	if m.choice == "Mark Done Selected To-do" {
-		todos.Toggle(1) //index
-		storage.Save(todos)
-		return todos.Print()
-	}
-	if m.choice == "Edit To-do" {
-		todos.Edit(1, "yoo edited")
-		storage.Save(todos)
-		return todos.Print()
-	}
-	if m.quitting {
-		return quitTextStyle.Render("see ya")
-	}
-
-	return "\n" + m.list.View()
 }
 
 func main() {
+	todos := Todos{}
+	storage := NewStorage[Todos]("todos.json")
+	storage.Load(&todos)
 
-	items := []list.Item{
-		item("Show To-do List"),
-		item("Mark Done Selected To-do"),
-		item("Add New To-do"),
-		item("Delete To-do"),
-		item("Edit To-do"),
+	quit := true
+	for quit {
+		inputValue := HomePage()
+		if inputValue == "1" {
+
+			fmt.Print(todos.Print())
+			fmt.Printf("type 'b' for go back to menu:")
+			waitForQuit()
+		}
+		if inputValue == "2" {
+			indexValue := IndexInputField()
+			todos.Toggle(indexValue)
+			storage.Save(todos)
+			fmt.Print(todos.Print())
+			fmt.Printf("type 'b' for go back to menu:")
+			waitForQuit()
+		}
+		if inputValue == "3" {
+			newTodo := TextInputField("yo")
+			todos.Add(newTodo)
+			storage.Save(todos)
+			fmt.Print(todos.Print())
+			fmt.Printf("type 'b' for go back to menu:")
+			waitForQuit()
+		}
+		if inputValue == "4" {
+			indexValue := IndexInputField()
+			todos.Delete(indexValue)
+			storage.Save(todos)
+			fmt.Print(todos.Print())
+			fmt.Printf("type 'b' for go back to menu: ")
+			waitForQuit()
+		}
+		if inputValue == "5" {
+			fmt.Print(todos.Print())
+			indexValue := IndexInputField()
+			editedText := TextInputField("yooo")
+			todos.Edit(indexValue, editedText)
+			storage.Save(todos)
+			fmt.Print(todos.Print())
+			fmt.Printf("type 'b' for go back to menu: ")
+			waitForQuit()
+		}
 	}
-
-	const defaultWidth = 20
-
-	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
-	l.Title = "To-Do CLI App"
-	l.SetShowStatusBar(false)
-	l.SetFilteringEnabled(false)
-	l.Styles.Title = titleStyle
-	l.Styles.PaginationStyle = paginationStyle
-	l.Styles.HelpStyle = helpStyle
-
-	m := model{list: l}
-
-	if _, err := tea.NewProgram(m).Run(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
-	}
-
-	// cmdFlags := NewCmdFlags()
-	// cmdFlags.Execute(&todos)
 
 }
