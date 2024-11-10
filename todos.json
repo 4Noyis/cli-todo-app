@@ -1,74 +1,26 @@
 [
     {
-        "Title": "basdwafawefewqqqq\u0003\u0003cle",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T20:09:43.036452+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "edited",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T22:37:11.745355+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T22:37:50.544597+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "q",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T22:37:58.324867+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
+        "Title": "first todo but edited",
+        "Completed": true,
         "CreatedAt": "2024-11-09T22:39:43.492309+02:00",
-        "CompleteTime": null
+        "CompleteTime": "2024-11-10T16:02:29.088534+02:00"
     },
     {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T22:42:02.911465+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T22:55:45.469281+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T23:00:20.941439+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T23:00:30.272211+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T23:06:33.89462+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "First todo",
-        "Completed": false,
-        "CreatedAt": "2024-11-09T23:07:25.600945+02:00",
-        "CompleteTime": null
-    },
-    {
-        "Title": "New todo",
+        "Title": "2 index todo",
         "Completed": false,
         "CreatedAt": "2024-11-10T03:32:52.655164+02:00",
+        "CompleteTime": null
+    },
+    {
+        "Title": "fix the issues",
+        "Completed": true,
+        "CreatedAt": "2024-11-10T16:27:06.386068+02:00",
+        "CompleteTime": "2024-11-10T16:27:18.311727+02:00"
+    },
+    {
+        "Title": "new todo check",
+        "Completed": false,
+        "CreatedAt": "2024-11-10T17:20:04.845552+02:00",
         "CompleteTime": null
     }
 ]

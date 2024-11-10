@@ -9,11 +9,15 @@ import (
 )
 
 func HomePage() string {
+	todos := Todos{}
+	storage := NewStorage[Todos]("todos.json")
+	storage.Load(&todos)
 
 	InputValue := ""
 	quit := true
 
 	for quit {
+		fmt.Print(todos.Print())
 		fmt.Printf("1- Show To-Do List\n2- Mark Done Selected To-do\n3- Add New To-Do\n4- Delete To-Do\n5- Edit To-Do\n")
 		fmt.Print("Enter a command: ")
 
@@ -37,11 +41,12 @@ func HomePage() string {
 
 }
 
-func TextInputField(printText string) string {
+func TextInputField(headerText string) string {
+	const exitIndicator = "b"
 	var inputValue string
 
 	for {
-		fmt.Print(printText + "-> ")
+		fmt.Print(headerText + "-> ")
 
 		reader := bufio.NewReader(os.Stdin)
 		line, _ := reader.ReadString('\n')
@@ -50,6 +55,7 @@ func TextInputField(printText string) string {
 		if input == "b" {
 			fmt.Print("\033[H\033[2J")
 			HomePage()
+			return exitIndicator
 		}
 
 		inputValue = input
@@ -58,11 +64,12 @@ func TextInputField(printText string) string {
 	return inputValue
 }
 
-func IndexInputField() int {
+func IndexInputField(headerText string) int {
+	const exitIndicator = -1
 	var inputValue int
 
 	for {
-		fmt.Print("To-do index: ")
+		fmt.Print(headerText + "--> ")
 
 		reader := bufio.NewReader(os.Stdin)
 		line, _ := reader.ReadString('\n')
@@ -71,6 +78,7 @@ func IndexInputField() int {
 		if input == "b" {
 			fmt.Print("\033[H\033[2J")
 			HomePage()
+			return exitIndicator
 		}
 
 		// Try to parse the input as an integer
@@ -91,11 +99,14 @@ func waitForQuit() {
 	for {
 		input, _ := reader.ReadString('\n')
 		if input == "b\n" {
-			fmt.Println("Exiting...")
 			fmt.Print("\033[H\033[2J")
 			return
 		}
 	}
+}
+
+func cleanScreen() {
+	fmt.Print("\033[H\033[2J")
 }
 
 func main() {
@@ -106,45 +117,79 @@ func main() {
 	quit := true
 	for quit {
 		inputValue := HomePage()
+		// SHOW TABLE
 		if inputValue == "1" {
-
+			cleanScreen()
 			fmt.Print(todos.Print())
 			fmt.Printf("type 'b' for go back to menu:")
 			waitForQuit()
 		}
+		// MARK DONE SELECTED TODO
 		if inputValue == "2" {
-			indexValue := IndexInputField()
-			todos.Toggle(indexValue)
-			storage.Save(todos)
+			cleanScreen()
 			fmt.Print(todos.Print())
-			fmt.Printf("type 'b' for go back to menu:")
-			waitForQuit()
+			indexValue := IndexInputField("Type index number of seleceted to-do ")
+			if indexValue == -1 {
+				continue
+			} else {
+				todos.Toggle(indexValue)
+				storage.Save(todos)
+				cleanScreen()
+				fmt.Print(todos.Print())
+				fmt.Printf("type 'b' for go back to menu:")
+				waitForQuit()
+			}
 		}
+		// ADD NEW TODO
 		if inputValue == "3" {
-			newTodo := TextInputField("yo")
-			todos.Add(newTodo)
-			storage.Save(todos)
-			fmt.Print(todos.Print())
-			fmt.Printf("type 'b' for go back to menu:")
-			waitForQuit()
+			newTodo := TextInputField("Type title of new to-do ")
+			if newTodo == "b" {
+				continue
+			} else {
+				todos.Add(newTodo)
+				storage.Save(todos)
+				cleanScreen()
+				fmt.Print(todos.Print())
+				fmt.Printf("type 'b' for go back to menu:")
+				waitForQuit()
+			}
 		}
+		// DELETE TODO
 		if inputValue == "4" {
-			indexValue := IndexInputField()
-			todos.Delete(indexValue)
-			storage.Save(todos)
+			cleanScreen()
 			fmt.Print(todos.Print())
-			fmt.Printf("type 'b' for go back to menu: ")
-			waitForQuit()
+			indexValue := IndexInputField("Type index number for deleting to-do ")
+			if indexValue == -1 {
+				continue
+			} else {
+				todos.Delete(indexValue)
+				storage.Save(todos)
+				fmt.Print(todos.Print())
+				fmt.Printf("type 'b' for go back to menu: ")
+				waitForQuit()
+			}
 		}
+		// EDIT TODO
 		if inputValue == "5" {
+			cleanScreen()
 			fmt.Print(todos.Print())
-			indexValue := IndexInputField()
-			editedText := TextInputField("yooo")
-			todos.Edit(indexValue, editedText)
-			storage.Save(todos)
-			fmt.Print(todos.Print())
-			fmt.Printf("type 'b' for go back to menu: ")
-			waitForQuit()
+			indexValue := IndexInputField("Type index number of selected to-do for editting ")
+			if indexValue == -1 {
+				continue
+			} else {
+				editedText := TextInputField("Type new title of edited to-do ")
+				if editedText == "b" {
+					continue
+				} else {
+					todos.Edit(indexValue, editedText)
+					storage.Save(todos)
+					fmt.Print(todos.Print())
+					fmt.Printf("type 'b' for go back to menu: ")
+					waitForQuit()
+				}
+			}
+
+		} else {
 		}
 	}
 
