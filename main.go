@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+func cleanScreen() {
+	fmt.Print("\033[H\033[2J")
+}
+
 func HomePage() string {
 	todos := Todos{}
 	storage := NewStorage[Todos]("todos.json")
@@ -56,10 +60,10 @@ func TextInputField(headerText string) string {
 			fmt.Print("\033[H\033[2J")
 			HomePage()
 			return exitIndicator
+		} else {
+			inputValue = input
+			break
 		}
-
-		inputValue = input
-		break
 	}
 	return inputValue
 }
@@ -84,7 +88,7 @@ func IndexInputField(headerText string) int {
 		// Try to parse the input as an integer
 		value, err := strconv.Atoi(input)
 		if err != nil {
-			fmt.Println("[Error] Please enter a valid integer or type 'exit' to quit.")
+			fmt.Println("[Error] Please enter a valid integer or type 'b' to quit.")
 			continue // Prompt again if input is invalid
 		}
 
@@ -99,14 +103,10 @@ func waitForQuit() {
 	for {
 		input, _ := reader.ReadString('\n')
 		if input == "b\n" {
-			fmt.Print("\033[H\033[2J")
+			cleanScreen()
 			return
 		}
 	}
-}
-
-func cleanScreen() {
-	fmt.Print("\033[H\033[2J")
 }
 
 func main() {
@@ -115,8 +115,8 @@ func main() {
 	storage := NewStorage[Todos]("todos.json")
 	storage.Load(&todos)
 
-	quit := true
-	for quit {
+	for {
+		cleanScreen()
 		inputValue := HomePage()
 		// SHOW TABLE
 		if inputValue == "1" {
@@ -129,16 +129,21 @@ func main() {
 		if inputValue == "2" {
 			cleanScreen()
 			fmt.Print(todos.Print())
-			indexValue := IndexInputField("Type index number of seleceted to-do ")
-			if indexValue == -1 {
-				continue
-			} else {
-				todos.Toggle(indexValue)
-				storage.Save(todos)
-				cleanScreen()
-				fmt.Print(todos.Print())
-				fmt.Printf("type 'b' for go back to menu:")
-				waitForQuit()
+			for {
+				indexValue := IndexInputField("Type index number of seleceted to-do ")
+				if indexValue == -1 {
+					break
+				} else if err := todos.ValidateIndex(indexValue); err != nil {
+					continue
+				} else {
+					todos.Toggle(indexValue)
+					storage.Save(todos)
+					cleanScreen()
+					fmt.Print(todos.Print())
+					fmt.Printf("type 'b' for go back to menu: ")
+					waitForQuit()
+					break
+				}
 			}
 		}
 		// ADD NEW TODO
@@ -159,37 +164,47 @@ func main() {
 		if inputValue == "4" {
 			cleanScreen()
 			fmt.Print(todos.Print())
-			indexValue := IndexInputField("Type index number for deleting to-do ")
-			if indexValue == -1 {
-				continue
-			} else {
-				todos.Delete(indexValue)
-				storage.Save(todos)
-				fmt.Print(todos.Print())
-				fmt.Printf("type 'b' for go back to menu: ")
-				waitForQuit()
+			for {
+				indexValue := IndexInputField("Type index number for deleting to-do ")
+				if indexValue == -1 {
+					continue
+				} else if err := todos.ValidateIndex(indexValue); err != nil {
+					continue
+				} else {
+					todos.Delete(indexValue)
+					storage.Save(todos)
+					fmt.Print(todos.Print())
+					fmt.Printf("type 'b' for go back to menu: ")
+					waitForQuit()
+					break
+				}
 			}
 		}
 		// EDIT TODO
 		if inputValue == "5" {
 			cleanScreen()
 			fmt.Print(todos.Print())
-			indexValue := IndexInputField("Type index number of selected to-do for editting ")
-			if indexValue == -1 {
-				continue
-			} else {
-				editedText := TextInputField("Type new title of edited to-do ")
-				if editedText == "b" {
+			for {
+				indexValue := IndexInputField("Type index number of selected to-do for editting ")
+				err := todos.ValidateIndex(indexValue)
+				if indexValue == -1 {
+					break
+				} else if err != nil {
 					continue
 				} else {
-					todos.Edit(indexValue, editedText)
-					storage.Save(todos)
-					fmt.Print(todos.Print())
-					fmt.Printf("type 'b' for go back to menu: ")
-					waitForQuit()
+					editedText := TextInputField("Type new title of edited to-do ")
+					if editedText == "b" {
+						break
+					} else {
+						todos.Edit(indexValue, editedText)
+						storage.Save(todos)
+						fmt.Print(todos.Print())
+						fmt.Printf("type 'b' for go back to menu: ")
+						waitForQuit()
+						break
+					}
 				}
 			}
-
 		} else {
 		}
 	}

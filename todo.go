@@ -32,7 +32,7 @@ func (todos *Todos) Add(title string) {
 
 func (todos *Todos) ValidateIndex(index int) error {
 	if index < 0 || index > len(*todos) {
-		err := errors.New("invalid index")
+		err := errors.New("[Error] invalid index")
 		fmt.Println(err)
 		return err
 	}

@@ -1,26 +1,26 @@
 [
     {
         "Title": "first todo but edited",
-        "Completed": true,
+        "Completed": false,
         "CreatedAt": "2024-11-09T22:39:43.492309+02:00",
-        "CompleteTime": "2024-11-10T16:02:29.088534+02:00"
+        "CompleteTime": "2024-11-11T02:47:02.019289+02:00"
     },
     {
-        "Title": "2 index todo",
-        "Completed": false,
+        "Title": "ase",
+        "Completed": true,
         "CreatedAt": "2024-11-10T03:32:52.655164+02:00",
-        "CompleteTime": null
+        "CompleteTime": "2024-11-11T02:45:40.859937+02:00"
     },
     {
         "Title": "fix the issues",
-        "Completed": true,
+        "Completed": false,
         "CreatedAt": "2024-11-10T16:27:06.386068+02:00",
         "CompleteTime": "2024-11-10T16:27:18.311727+02:00"
     },
     {
         "Title": "new todo check",
-        "Completed": false,
+        "Completed": true,
         "CreatedAt": "2024-11-10T17:20:04.845552+02:00",
-        "CompleteTime": null
+        "CompleteTime": "2024-11-11T02:36:43.970696+02:00"
     }
 ]
