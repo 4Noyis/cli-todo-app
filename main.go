@@ -110,6 +110,7 @@ func cleanScreen() {
 }
 
 func main() {
+	cleanScreen()
 	todos := Todos{}
 	storage := NewStorage[Todos]("todos.json")
 	storage.Load(&todos)
