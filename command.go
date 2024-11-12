@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/4Noyis/cli-todo-app/models"
 )
 
 type CmdFlags struct {
@@ -18,7 +20,6 @@ type CmdFlags struct {
 
 func NewCmdFlags() *CmdFlags {
 	cf := CmdFlags{}
-
 	flag.StringVar(&cf.Add, "add", "", "Add a new todo specify title")
 	flag.StringVar(&cf.Edit, "edit", "", "Edit a todo by index & specify a new title. id:new_title")
 	flag.IntVar(&cf.Del, "del", -1, "Specify a todo by index to delete")
@@ -30,7 +31,7 @@ func NewCmdFlags() *CmdFlags {
 	return &cf
 }
 
-func (cf *CmdFlags) Execute(todos *Todos) {
+func (cf *CmdFlags) Execute(todos *models.Todos) {
 	switch {
 	case cf.List:
 		todos.Print()

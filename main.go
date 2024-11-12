@@ -1,5 +1,7 @@
 package main
 
+import "github.com/4Noyis/cli-todo-app/app"
+
 func main() {
-	Run()
+	app.Run()
 }

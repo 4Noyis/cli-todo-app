@@ -24,5 +24,5 @@ go build -o todo
 
  Start managing your to-do tasks by running:
 ```bash
-./todo -help
+./todo
 ```

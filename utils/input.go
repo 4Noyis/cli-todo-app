@@ -2,7 +2,7 @@
 // Indexinputfield
 // Waitforquit
 
-package main
+package utils
 
 import (
 	"bufio"
@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/4Noyis/cli-todo-app/ui"
 )
 
 func TextInputField(headerText string) string {
@@ -67,7 +69,7 @@ func WaitForQuit() {
 	for {
 		input, _ := reader.ReadString('\n')
 		if input == "b\n" {
-			CleanScreen()
+			ui.CleanScreen()
 			return
 		}
 	}

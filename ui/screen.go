@@ -1,12 +1,15 @@
 // CleanScreen
 // HomePage
-package main
+package ui
 
 import (
 	"bufio"
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/4Noyis/cli-todo-app/models"
+	"github.com/4Noyis/cli-todo-app/storage"
 )
 
 func CleanScreen() {
@@ -14,8 +17,8 @@ func CleanScreen() {
 }
 
 func HomePage() string {
-	todos := Todos{}
-	storage := NewStorage[Todos]("todos.json")
+	todos := models.Todos{}
+	storage := storage.NewStorage[models.Todos]("todos.json")
 	storage.Load(&todos)
 
 	InputValue := ""
@@ -23,7 +26,7 @@ func HomePage() string {
 
 	for quit {
 		fmt.Print(todos.Print())
-		fmt.Printf("1- Show To-Do List\n2- Mark Done Selected To-do\n3- Add New To-Do\n4- Delete To-Do\n5- Edit To-Do\n")
+		fmt.Printf("1- Show To-Do List\n2- Toggle Selected To-do\n3- Add New To-Do\n4- Delete To-Do\n5- Edit To-Do\n")
 		fmt.Print("Enter a command: ")
 
 		reader := bufio.NewReader(os.Stdin)
