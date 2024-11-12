@@ -1,9 +1,9 @@
 [
     {
         "Title": "new todo 0",
-        "Completed": false,
+        "Completed": true,
         "CreatedAt": "2024-11-09T22:39:43.492309+02:00",
-        "CompleteTime": "2024-11-11T02:47:02.019289+02:00"
+        "CompleteTime": "2024-11-12T19:01:16.718592+02:00"
     },
     {
         "Title": "new todo 1",

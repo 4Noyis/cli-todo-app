@@ -58,7 +58,6 @@ func TextInputField(headerText string) string {
 
 		if input == "b" {
 			fmt.Print("\033[H\033[2J")
-			HomePage()
 			return exitIndicator
 		} else {
 			inputValue = input
@@ -81,7 +80,6 @@ func IndexInputField(headerText string) int {
 
 		if input == "b" {
 			fmt.Print("\033[H\033[2J")
-			HomePage()
 			return exitIndicator
 		}
 
