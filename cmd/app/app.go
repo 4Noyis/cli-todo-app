@@ -15,7 +15,7 @@ import (
 func Run() {
 	ui.CleanScreen()
 	todos := models.Todos{}
-	storage := storage.NewStorage[models.Todos]("todos.json")
+	storage := storage.NewStorage[models.Todos]("data/todos.json")
 	storage.Load(&todos)
 
 	for {
