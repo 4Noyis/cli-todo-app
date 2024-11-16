@@ -15,7 +15,7 @@ import (
 func Run() {
 	ui.CleanScreen()
 	todos := models.Todos{}
-	storage := storage.NewStorage[models.Todos]("data/todos.json")
+	storage := storage.NewStorage[models.Todos]("todos.json")
 	storage.Load(&todos)
 
 	for {
@@ -27,6 +27,7 @@ func Run() {
 }
 
 func handleUserInput(inputValue string, todos *models.Todos, storage *storage.Storage[models.Todos]) {
+
 	switch inputValue {
 	case "1":
 		ui.CleanScreen()
